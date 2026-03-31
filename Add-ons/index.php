@@ -10,13 +10,6 @@ use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
 use Twig\TwigFilter;
 
-
-$host = 'localhost';
-$db = 'system_db';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
-
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
