@@ -1,0 +1,156 @@
+
+{% extends 'layout.twig' %}
+{% import "block/base.twig" as base %}  
+
+{% block content %}
+{{ alert.show()|raw }}
+
+<div style="margin-bottom: 20px;">
+    {{ base.header(filtro_label ~ ' (' ~ paginacao.registros ~ ')', 'list') }}
+</div>
+
+  
+<div class="ui segment" style="padding: 0; border: 1px solid #ddd; border-radius: 8px; box-shadow: none;">
+    
+    <div style="overflow-x: auto; width: 100%;">
+        <table class="ui striped selectable table unstackable" style="margin: 0; min-width: 800px;">  
+            <thead>
+                <tr>
+                    <th class="one wide">ID</th>
+                    <th class="three wide">Caixa / Liderança</th>
+                    <th class="four wide">Militar(es)</th>
+                    <th class="two wide">Valor</th>
+                    <th class="two wide">Horário</th>
+                    <th class="two wide">Data</th>
+                    <th class="three wide">Status</th>
+                    <th class="four wide right aligned" style="padding-right: 20px;">Ações Rápidas</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if lista|length > 0 %}  
+                
+                {% set arr_status = [
+                    "<span class='ui label basic green mini' style='display: inline-flex; align-items: center; white-space: nowrap; padding: 6px 10px; min-width: 95px;'><i class='checkmark icon'></i> Verificado</span>",
+                    "<span class='ui label basic yellow mini' style='display: inline-flex; align-items: center; white-space: nowrap; padding: 6px 10px; min-width: 95px;'><i class='wait icon'></i> Pendente</span>",
+                    "<span class='ui label basic black mini' style='display: inline-flex; align-items: center; white-space: nowrap; padding: 6px 10px; min-width: 95px;'><i class='money icon'></i> Pago</span>"
+                ] %}
+                
+                {% for item in lista %}  
+                    <tr>  
+                        <td><span style="color: #bbb; font-size: 0.85em;">#{{ item.id }}</span></td>  
+                        <td><strong>{{ item.aplicador }}</strong></td>
+                        <td><b>{{ item.envolvidos ? item.envolvidos : "-" }}</b></td> 
+                        <td>
+                            <span class="ui label basic green" style="font-weight: bold;">
+                                {{ item.valor|number_format(0, ',', '.') }}
+                            </span>
+                        </td>
+                        <td>{{ item.horario }}</td> 
+                        <td><span style="color: #999;">{{ item.data_postagem ? item.data_postagem|date('d/m/Y') : "-" }}</span></td>  
+                        <td>{{ arr_status[item.status]|raw }}</td>  
+                        <td class="right aligned" style="padding-right: 15px;">
+                            
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; white-space: nowrap;">
+                                
+                                <a class="ui small basic icon button" href="{{ link ~ '/ver/' ~ item.id }}" title="Ver Dossiê">
+                                    <i class="eye icon"></i>
+                                </a>
+
+                                
+                                <div class="ui dropdown icon small basic button" title="Mais Opções">
+                                    <i class="ellipsis vertical icon"></i>
+                                    <div class="menu">
+                                        <a class="item" href="{{ link ~ '/editar/' ~ item.id }}">
+                                            <i class="edit icon"></i> Editar
+                                        </a>
+                                        <div class="divider"></div>
+                                        <a class="item" href="{{ link ~ '/apagar/' ~ item.id }}" style="color: #db2828;">
+                                            <i class="trash alternate outline icon"></i> Apagar
+                                        </a>
+                                    </div>
+                                </div>
+
+                                
+                                {% if item.status == '1' or item.status == 1 %}
+                                    <a class="ui green mini button action-verificado" data-id="{{ item.id }}" style="margin: 0; padding: 10px 14px; font-weight: bold; border-radius: 4px;">
+                                        <i class="checkmark icon"></i> Verificar
+                                    </a>
+                                {% elseif item.status == '0' or item.status == 0 %}
+                                    <a class="ui black mini button action-pago" data-id="{{ item.id }}" style="margin: 0; padding: 10px 14px; font-weight: bold; border-radius: 4px;">
+                                        <i class="money icon"></i> Pagar
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                        </td>
+                    </tr>
+                {% endfor %}  
+            {% else %}  
+                <tr>  
+                    <td class="center aligned" colspan="8" style="padding: 60px 0;">  
+                        <div class="ui placeholder segment basic" style="box-shadow: none; border: none; background: transparent;">
+                            <div class="ui icon header">
+                                <i class="search icon grey" style="font-size: 3em; opacity: 0.3;"></i>
+                                <div style="margin-top: 15px; color: #999;">Nenhuma pendência encontrada.</div>
+                            </div>
+                        </div> 
+                    </td>  
+                </tr>  
+            {% endif %}  
+            </tbody>
+        </table>  
+    </div>
+</div>
+
+
+
+<div class="ui segment basic center aligned" style="padding: 20px 0; border: none;">
+    <form method="GET" class="ui form paginacao" style="display: inline-flex; align-items: center; gap: 15px;">
+        <input type="hidden" name="filtro[status]" value="{{ filtro.status }}">
+        <input type="hidden" name="filtro[q]" value="{{ filtro.q }}">
+
+        {% set ant = paginacao.atual - 1 %}
+        {% set prox = paginacao.atual + 1 %}
+
+        <a href="?pagina={{ ant }}&filtro[status]={{ filtro.status }}&filtro[q]={{ filtro.q }}" 
+           class="ui icon basic button {{ paginacao.atual == 1 ? 'disabled' : '' }}" style="box-shadow: none; border: none;">
+            <i class="arrow circle left large icon"></i>
+        </a>
+
+        <div class="field" style="margin: 0; display: inline-flex; align-items: center; gap: 10px;">
+            <input type="number" name="pagina" min="1" max="{{ paginacao.total }}" value="{{ paginacao.atual }}" 
+                   style="width: 60px; text-align: center; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+            <span style="font-weight: bold; color: #666;">de {{ paginacao.total }} Páginas</span>
+        </div>
+
+        <a href="?pagina={{ prox }}&filtro[status]={{ filtro.status }}&filtro[q]={{ filtro.q }}" 
+           class="ui icon basic button {{ paginacao.atual == paginacao.total ? 'disabled' : '' }}" style="box-shadow: none; border: none;">
+            <i class="arrow circle right large icon"></i>
+        </a>
+    </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('.ui.dropdown').dropdown({
+        on: 'hover',
+        action: 'hide'
+    });
+
+    $('.action-pago, .action-verificado').on('click', function(e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const action = $btn.hasClass('action-verificado') ? 'verificado' : 'pago';
+        
+        $btn.addClass('loading disabled');
+        
+        $.post(window.location.pathname, { 
+            ajax_action: action, 
+            id: $btn.data('id') 
+        }, function(r) {
+            location.reload();
+        });
+    });
+});
+</script>
+{% endblock %}
