@@ -1,0 +1,87 @@
+
+{% extends 'layout.twig' %}
+{% import "block/base.twig" as base %}
+
+{% block content %}
+<div class="ui segment inverted black" style="border-radius: 8px 8px 0 0; padding: 15px 25px;">
+    <h4 class="ui header inverted" style="margin: 0;"><i class="id card outline icon"></i> Dossiê da Pendência #{{ item.id }}</h4>
+</div>
+
+{{ alert.show()|raw }}
+
+
+<div class="ui segment" style="border-radius: 0 0 8px 8px; border: 1px solid #ddd; border-top: none; box-shadow: none; padding: 30px;">
+    <div class="ui grid stackable container">
+        <div class="eight wide column">
+            <div class="ui list">
+                <div class="item" style="margin-bottom: 20px;">
+                    <i class="user circle icon"></i>
+                    <div class="content">
+                        <div class="header" style="color: #666; font-size: 0.85em; text-transform: uppercase;">Militar Envolvido</div>
+                        <div class="description" style="font-size: 1.2em; font-weight: bold; color: #1b1c1d;">{{ item.envolvidos }}</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <i class="shield alternate icon"></i>
+                    <div class="content">
+                        <div class="header" style="color: #666; font-size: 0.85em; text-transform: uppercase;">Postado por (Liderança)</div>
+                        <div class="description" style="font-weight: bold;">{{ item.aplicador }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="eight wide column">
+            <div class="ui list">
+                <div class="item" style="margin-bottom: 20px;">
+                    <i class="coins yellow icon"></i>
+                    <div class="content">
+                        <div class="header" style="color: #666; font-size: 0.85em; text-transform: uppercase;">Valor a Receber</div>
+                        <div class="description">
+                            <span class="ui label basic green large" style="font-weight: bold;">
+                                <i class="dollar sign icon"></i> {{ item.valor|number_format(0, ',', '.') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <i class="calendar alternate outline icon"></i>
+                    <div class="content">
+                        <div class="header" style="color: #666; font-size: 0.85em; text-transform: uppercase;">Data & Horário</div>
+                        <div class="description" style="font-weight: bold;">{{ item.data_postagem ? item.data_postagem|date('d/m/Y') : '-' }} às {{ item.horario }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sixteen wide column">
+            <div class="ui segment secondary small" style="border-radius: 8px; background: #f9fafb;">
+                <i class="user icon"></i> <b>Responsável OC:</b> {{ item.responsavel_oc }}
+            </div>
+        </div>
+
+        <div class="sixteen wide column center aligned">
+            <div class="ui divider"></div>
+            {% set labels = [
+                "<div class='ui label green basic large'><i class='check circle icon'></i> Verificado</div>",
+                "<div class='ui label yellow basic large'><i class='clock outline icon'></i> Pendente</div>",
+                "<div class='ui label black basic large'><i class='money bill alternate outline icon'></i> Pago</div>"
+            ] %}
+            <div style="margin-bottom: 20px;">{{ labels[item.status]|raw }}</div>
+
+            <div class="ui grid stackable centered">
+                <div class="six wide column">
+                    <a href="{{ link }}" class="ui black labeled icon button fluid">
+                        <i class="reply icon"></i> Voltar para a Lista
+                    </a>
+                </div>
+                <div class="six wide column">
+                    <a href="{{ link ~ '/editar/' ~ item.id }}" class="ui basic grey labeled icon button fluid">
+                        <i class="edit icon"></i> Editar Registro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

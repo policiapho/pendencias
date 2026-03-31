@@ -1,0 +1,42 @@
+
+{% extends 'layout.twig' %}
+{% import "block/base.twig" as base %}
+
+{% block content %}
+<div class="ui segment inverted red" style="border-radius: 8px 8px 0 0; padding: 15px 25px;">
+    <h4 class="ui header inverted" style="margin: 0;"><i class="trash outline icon"></i> Remover Registro de Pendência</h4>
+</div>
+
+{{ alert.show()|raw }}
+
+
+<div class="ui segment" style="border-radius: 0 0 8px 8px; border: 1px solid #ddd; border-top: none; box-shadow: none; padding: 40px; text-align: center;">
+    <i class="trash icon grey" style="font-size: 5em; opacity: 0.1; margin-bottom: 25px;"></i>
+    <h2 class="ui header">
+        Deseja apagar permanentemente o registro de <b style="color: #db2828;">{{ item.envolvidos|upper }}</b>?
+        <div class="sub header" style="margin-top: 15px; font-size: 1.1em;">
+            O registro de ID #{{ item.id }} será removido imediatamente do banco de dados.
+        </div>
+    </h2>
+    
+    <div class="ui divider" style="margin: 40px auto; width: 80%;"></div>
+
+    <form action="{{ link }}/apagar/{{ item.id }}" method="POST">
+        <input type="hidden" name="_token" value="{{ token() }}">
+        <input type="hidden" name="id" value="{{ item.id }}">
+        
+        <div class="ui grid stackable centered">
+            <div class="five wide column">
+                <button type="submit" class="ui red labeled icon button fluid">
+                    <i class="trash icon"></i> Confirmar Exclusão
+                </button>
+            </div>
+            <div class="five wide column">
+                <a href="{{ link }}" class="ui black labeled icon button fluid">
+                    <i class="reply icon"></i> Cancelar / Voltar
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

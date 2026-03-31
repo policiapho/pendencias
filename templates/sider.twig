@@ -1,0 +1,131 @@
+
+<div class="four wide column">
+    <h2 class="ui header" style="text-shadow: none; margin-bottom: 20px;">
+        <i class="bullhorn icon"></i>
+        <div class="content">
+            Pendência
+            <div class="sub header">Gerencie Pendências</div>
+        </div>
+    </h2>
+
+    <div class="ui vertical menu fluid" style="border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px;">
+        <div class="item" style="padding: 10px;">
+            <form action="{{ link }}" method="GET" style="width: 100%;">
+                <div class="ui transparent icon input fluid" style="width: 100%;">
+                    <input type="hidden" name="filtro[lista]" value="todas">
+                    <input type="text" name="filtro[q]" placeholder="Procurar militar..." value="{{ filtro.q ?? '' }}" style="width: 100% !important;">
+                    <i class="search icon"></i>
+                </div>
+            </form>
+        </div>
+        <a class="item {{ page == 'aplicar' ? 'active blue' : '' }}" href="{{ link }}/aplicar" style="padding: 10px 15px;">
+            <i class="plus icon"></i> Aplicar Pendência
+        </a>
+        <a class="item {{ filtro.meu == '1' ? 'active blue' : '' }}" href="{{ link }}?filtro[meu]=1" style="padding: 10px 15px;">
+            <i class="user icon"></i> Minhas Pendências
+        </a>
+        <a class="item {{ page == 'index' and filtro.status == '-1' and not filtro.meu ? 'active blue' : '' }}" href="{{ link }}?filtro[status]=-1" style="padding: 10px 15px;">
+            <i class="list icon"></i> Todas as Pendências
+        </a>
+    </div>
+
+    
+    <div class="ui segments" style="border-radius: 8px; border: 1px solid #ddd; box-shadow: none; margin-bottom: 20px;">
+        <div class="ui segment inverted black" style="border-radius: 8px 8px 0 0; padding: 10px 15px;">
+            <h4 class="ui header inverted" style="margin: 0; text-shadow: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                <i class="chart bar icon"></i>
+                <div class="content">Métricas do Sistema</div>
+            </h4>
+        </div>
+        
+        <div class="ui segment" style="padding: 5px;">
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
+                
+                
+                <a href="{{ link }}?filtro[status]=1" class="ui segment basic center aligned {{ filtro.status == '1' ? 'active blue' : '' }}" 
+                   style="flex: 1 1 calc(50% - 5px); min-width: 100px; padding: 10px 5px; margin: 0; border: 1px solid #eee; background: #fff;">
+                    <div class="ui tiny statistic">
+                        <div class="value" style="font-size: 1.2rem !important; color: #f2c037;">
+                            <i class="wait icon" style="font-size: 0.9em; margin-right: 5px;"></i>{{ stats.pendente }}
+                        </div>
+                        <div class="label" style="font-size: 0.75rem !important; text-transform: none; color: #777;">Pendentes</div>
+                    </div>
+                </a>
+
+                
+                <a href="{{ link }}?filtro[status]=0" class="ui segment basic center aligned {{ filtro.status == '0' ? 'active blue' : '' }}" 
+                   style="flex: 1 1 calc(50% - 5px); min-width: 100px; padding: 10px 5px; margin: 0; border: 1px solid #eee; background: #fff;">
+                    <div class="ui tiny statistic">
+                        <div class="value" style="font-size: 1.2rem !important; color: #21ba45;">
+                            <i class="checkmark icon" style="font-size: 0.9em; margin-right: 5px;"></i>{{ stats.verificado }}
+                        </div>
+                        <div class="label" style="font-size: 0.75rem !important; text-transform: none; color: #777;">Verificados</div>
+                    </div>
+                </a>
+
+                
+                <a href="{{ link }}?filtro[status]=2" class="ui segment basic center aligned {{ filtro.status == '2' ? 'active blue' : '' }}" 
+                   style="flex: 1 1 calc(50% - 5px); min-width: 100px; padding: 10px 5px; margin: 0; border: 1px solid #eee; background: #fff;">
+                    <div class="ui tiny statistic">
+                        <div class="value" style="font-size: 1.2rem !important; color: #1b1c1d;">
+                            <i class="money icon" style="font-size: 0.9em; margin-right: 5px;"></i>{{ stats.pago }}
+                        </div>
+                        <div class="label" style="font-size: 0.75rem !important; text-transform: none; color: #777;">Pagos</div>
+                    </div>
+                </a>
+
+                
+                <div class="ui segment basic center aligned" style="flex: 1 1 calc(50% - 5px); min-width: 100px; padding: 10px 5px; margin: 0; border: 1px solid #eee; background: #fafafa;">
+                    <div class="ui tiny statistic">
+                        <div class="value" style="font-size: 1.2rem !important; color: #767676;">
+                            <i class="hashtag icon" style="font-size: 0.9em; margin-right: 5px;"></i>{{ stats.total }}
+                        </div>
+                        <div class="label" style="font-size: 0.75rem !important; text-transform: none; color: #777;">Total Geral</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="ui segment bottom attached" style="padding: 10px 15px; border-top: 1px solid #eee;">
+            <div style="font-size: 0.7rem; font-weight: bold; color: #777; margin-bottom: 5px; text-transform: uppercase;">
+                <i class="options icon"></i> Progresso de Quitação
+            </div>
+            <div class="ui progress tiny {{ stats.pendente > 0 ? 'yellow' : 'green' }} active" 
+                 data-percent="{{ stats.total > 0 ? (stats.pago / stats.total) * 100 : 0 }}" style="margin: 0;">
+                <div class="bar"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="ui segments" style="border-radius: 8px; border: 1px solid #ddd; box-shadow: none;">
+        <div class="ui segment inverted black" style="border-radius: 8px 8px 0 0; padding: 10px 15px; text-align: left;">
+            <h5 class="ui header inverted" style="margin: 0; text-shadow: none; display: flex; align-items: center; justify-content: flex-start; gap: 10px; min-height: 20px; font-size: 0.85rem;">
+                <i class="money icon" style="color: white !important;"></i>
+                <span>CONTABILIZAÇÃO</span>
+            </h5>
+        </div>
+        <div class="ui segment" style="max-height: 250px; overflow-y: auto; padding: 0;">
+            <table class="ui very basic compact table unstackable" style="margin: 0;">
+                <tbody style="font-size: 0.9em;">
+                    {% for item in contabilizacao %}
+                        <tr>
+                            <td style="padding: 10px 15px; color: #333;"><b>{{ item.envolvidos }}</b></td>
+                            <td class="right aligned" style="padding: 10px 15px;">
+                                <span class="ui label mini black" style="font-weight: bold;">{{ item.total_valor|number_format(0, ',', '.') }}</span>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="center aligned" style="padding: 20px; color: #999;">
+                                <i class="checkmark circle icon"></i> Nenhuma pendência.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

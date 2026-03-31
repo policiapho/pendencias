@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SystemPHO - Gestão de Pendências</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+    <style>
+        body { background-color: #f4f7f6; padding-top: 50px; }
+        .main.container { margin-top: 2em; }
+        .ui.header { color: #1a1a1a; }
+    </style>
+</head>
+<body>
+
+    <div class="ui fixed inverted menu">
+        <div class="ui container">
+            <a href="/systempho/pendencia" class="header item">
+                <i class="shield alternate icon"></i> SystemPHO
+            </a>
+            <a href="/systempho/pendencia" class="item">Dashboard</a>
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui icon input">
+                        <input type="text" placeholder="Pesquisar...">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+                <a class="item">Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui main container">
+        <div class="ui stackable grid">
+            
+            {% include 'sider.twig' %}
+            
+            
+            <div class="twelve wide column">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Inicializa todos os dropdowns MENOS o de usuários (membros)
+            $('.ui.dropdown:not(#usuarios)').dropdown();
+            $('.ui.accordion').accordion();
+
+            // Configuração específica para o campo de nicks (Membros Envolvidos)
+            $('#usuarios').dropdown({
+                allowAdditions: true, // HABILITA A ADIÇÃO DE NOVOS NICKS
+                maxSelections: 5,
+                useLabels: true,
+                forceSelection: false, // Impede que o sistema force uma escolha da lista
+                fullTextSearch: true,
+                message: {
+                    addResult: 'Adicionar <b>{term}</b>',
+                    maxSelections: 'Máximo de {maxSelections} militares atingido.'
+                }
+            });
+        });
+    </script>
+</body>
+</html>

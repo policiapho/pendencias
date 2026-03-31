@@ -1,0 +1,15 @@
+
+{% extends 'layout.twig' %}
+{% import "block/base.twig" as base %}
+
+{% block content %}
+<div class="ui segment inverted black" style="border-radius: 8px 8px 0 0; padding: 15px 25px;">
+    <h4 class="ui header inverted" style="margin: 0;"><i class="edit icon"></i> Editar Registro #{{ item.id }}</h4>
+</div>
+
+{{ alert.show()|raw }}
+
+<div class="ui segment" style="border-radius: 0 0 8px 8px; border: 1px solid #ddd; border-top: none; box-shadow: none; padding: 25px;">
+    {% include 'formulario.twig' %}
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+
+<form class="ui form" action="{{ link }}/{{ item ? 'editar/' ~ item.id : 'aplicar' }}" method="POST">
+    <input type="hidden" name="_token" value="{{ token() }}">
+    
+    <div class="two fields">
+        <div class="field required">
+            <label><i class="user icon"></i> Nick do Aplicador</label>
+            <input type="text" name="aplicador" value="{{ item.aplicador ?? conta.username }}" readonly style="background: #f4f4f4; cursor: not-allowed; font-weight: bold; color: #555;">
+        </div>
+        <div class="field required">
+            <label><i class="shield alternate icon"></i> Responsável OC</label>
+            <input type="text" name="oc" value="{{ item.responsavel_oc ?? '' }}" placeholder="Nickname do militar do OC" required>
+        </div>
+    </div>
+
+    
+    <div class="field required">
+        <label><i class="users icon"></i> Militar(es) Envolvido(s)</label>
+        <div class="ui multiple search selection dropdown" id="usuarios">
+            <input type="hidden" name="envolvidos" value="{{ item.envolvidos ?? '' }}">
+            <i class="dropdown icon"></i>
+            <div class="default text">Digite o nickname e pressione Enter...</div>
+            <div class="menu"></div>
+        </div>
+        <small style="color: #999;">Pressione Enter após cada nome (Máximo 5 membros).</small>
+    </div>
+
+    <div class="two fields">
+        <div class="field required">
+            <label><i class="coins icon"></i> Valor da Pendência</label>
+            <div class="ui icon input focus">
+                <input type="number" name="valor" value="{{ item.valor ?? '' }}" placeholder="Moedas" required>
+            </div>
+        </div>
+        <div class="field required">
+            <label><i class="clock outline icon"></i> Horário</label>
+            <div class="ui left icon input focus">
+                <i class="clock icon"></i>
+                <input type="time" name="horario" value="{{ item.horario ?? '00:00' }}" required>
+            </div>
+        </div>
+    </div>
+
+    {% if item %}
+    <div class="field required">
+        <label><i class="info circle icon"></i> Status Atual do Registro</label>
+        <select class="ui dropdown selection" name="status">
+            <option value="1" {{ item.status == 1 ? 'selected' : '' }}>Pendente (Aguardando)</option>
+            <option value="0" {{ item.status == 0 ? 'selected' : '' }}>Verificado (Validado)</option>
+            <option value="2" {{ item.status == 2 ? 'selected' : '' }}>Pago (Finalizado)</option>
+        </select>
+    </div>
+    {% endif %}
+
+    <div class="ui divider" style="margin: 25px 0;"></div>
+
+    <div class="ui center aligned grid">
+        <div class="column">
+            <button type="submit" class="ui black labeled icon button" style="padding: 15px 30px;">
+                <i class="save icon"></i> {{ item ? 'Salvar Alterações' : 'Aplicar Pendência' }}
+            </button>
+            <a href="{{ link }}" class="ui basic labeled icon button" style="margin-left: 10px; padding: 15px 30px;">
+                <i class="reply icon"></i> Cancelar / Voltar
+            </a>
+        </div>
+    </div>
+</form>
+
+<script>
+$(document).ready(function() {
+    // A inicialização principal agora acontece no layout.twig para evitar duplicidade.
+    // Apenas garantimos o funcionamento dos demais componentes.
+    $('select.dropdown').dropdown();
+});
+</script>
